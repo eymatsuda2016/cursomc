@@ -13,6 +13,7 @@ import com.eduardomatsuda.cursomc.domain.Cidade;
 import com.eduardomatsuda.cursomc.domain.Cliente;
 import com.eduardomatsuda.cursomc.domain.Endereco;
 import com.eduardomatsuda.cursomc.domain.Estado;
+import com.eduardomatsuda.cursomc.domain.ItemPedido;
 import com.eduardomatsuda.cursomc.domain.Pagamento;
 import com.eduardomatsuda.cursomc.domain.PagamentoComBoleto;
 import com.eduardomatsuda.cursomc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.eduardomatsuda.cursomc.repositories.CidadeRepository;
 import com.eduardomatsuda.cursomc.repositories.ClienteRepository;
 import com.eduardomatsuda.cursomc.repositories.EnderecoRepository;
 import com.eduardomatsuda.cursomc.repositories.EstadoRepository;
+import com.eduardomatsuda.cursomc.repositories.ItemPedidoRepository;
 import com.eduardomatsuda.cursomc.repositories.PagamentoRepository;
 import com.eduardomatsuda.cursomc.repositories.PedidoRepository;
 import com.eduardomatsuda.cursomc.repositories.ProdutoRepository;
@@ -48,6 +50,8 @@ public class CursomcApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	PagamentoRepository pagamentoRepository;
+	@Autowired
+	ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -100,7 +104,7 @@ public class CursomcApplication implements CommandLineRunner {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
-		Pedido ped1 = new Pedido(null, sdf.parse("30/06/2024 10:32"), cli1, e1);
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
 		Pedido ped2 = new Pedido(null, sdf.parse("10/06/2024 19:36"), cli1, e2);
 		
 		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
@@ -114,6 +118,17 @@ public class CursomcApplication implements CommandLineRunner {
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 		
-
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 }
