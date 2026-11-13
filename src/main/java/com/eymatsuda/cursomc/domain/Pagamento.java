@@ -77,7 +77,4 @@ public abstract class Pagamento implements Serializable {
 		Pagamento other = (Pagamento) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-
 }
